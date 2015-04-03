@@ -26,22 +26,25 @@ package org.opentdc.addressbooks.opencrx;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 
+import org.openmdx.base.exception.ServiceException;
 import org.opentdc.addressbooks.AddressbookModel;
 import org.opentdc.addressbooks.ServiceProvider;
+import org.opentdc.opencrx.AbstractOpencrxServiceProvider;
 
-public class OpencrxServiceProvider implements ServiceProvider {
+public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider implements ServiceProvider {
 
 	private static final Logger logger = Logger.getLogger(OpencrxServiceProvider.class.getName());
 
 	public OpencrxServiceProvider(
 		ServletContext context, 
 		String prefix
-	) {
-		logger.info("> OpencrxServiceProvider()");
+	) throws ServiceException, NamingException {
+		super(context, prefix);
 	}
-	
+
 	@Override
 	public List<AddressbookModel> list(
 		String queryType,
