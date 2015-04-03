@@ -23,6 +23,65 @@
  */
 package org.opentdc.addressbooks.opencrx;
 
-public class OpencrxServiceProvider {
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletContext;
+
+import org.opentdc.addressbooks.AddressbookModel;
+import org.opentdc.addressbooks.ServiceProvider;
+
+public class OpencrxServiceProvider implements ServiceProvider {
+
+	private static final Logger logger = Logger.getLogger(OpencrxServiceProvider.class.getName());
+
+	public OpencrxServiceProvider(
+		ServletContext context, 
+		String prefix
+	) {
+		logger.info("> OpencrxServiceProvider()");
+	}
+	
+	@Override
+	public List<AddressbookModel> list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressbookModel create(AddressbookModel addressbook) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressbookModel read(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressbookModel update(AddressbookModel addressbook) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void delete(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int count() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }
