@@ -43,8 +43,12 @@ public class OpencrxServiceProvider implements ServiceProvider {
 	}
 	
 	@Override
-	public List<AddressbookModel> list() {
-		// TODO Auto-generated method stub
+	public List<AddressbookModel> list(
+		String queryType,
+		String query,
+		long position,
+		long size
+	) {
 		return null;
 	}
 
@@ -61,8 +65,10 @@ public class OpencrxServiceProvider implements ServiceProvider {
 	}
 
 	@Override
-	public AddressbookModel update(AddressbookModel addressbook) {
-		// TODO Auto-generated method stub
+	public AddressbookModel update(
+		String id,
+		AddressbookModel addressbook
+	) {
 		return null;
 	}
 
