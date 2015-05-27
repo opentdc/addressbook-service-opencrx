@@ -24,7 +24,7 @@
 package org.opentdc.addressbooks.opencrx;
 
 import java.util.List;
-import java.util.logging.Logger;
+// import java.util.logging.Logger;
 
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
@@ -41,7 +41,7 @@ import org.opentdc.service.exception.NotFoundException;
 
 public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider implements ServiceProvider {
 
-	private static final Logger logger = Logger.getLogger(OpencrxServiceProvider.class.getName());
+	// private static final Logger logger = Logger.getLogger(OpencrxServiceProvider.class.getName());
 
 	public OpencrxServiceProvider(
 		ServletContext context, 
@@ -87,12 +87,6 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	}
 
 	@Override
-	public int count() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public List<ContactModel> listContacts(String aid, String query,
 			String queryType, int position, int size) {
 		// TODO Auto-generated method stub
@@ -107,7 +101,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	}
 
 	@Override
-	public ContactModel readContact(String cid) throws NotFoundException {
+	public ContactModel readContact(String aid, String cid) throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -124,12 +118,6 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			InternalServerErrorException {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public int countContacts(String aid) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	@Override
@@ -166,11 +154,4 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public int countAddresses(String aid, String cid) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }
