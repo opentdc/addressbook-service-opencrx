@@ -26,6 +26,8 @@ package org.opentdc.addressbooks.opencrx;
 import java.util.List;
 // import java.util.logging.Logger;
 
+
+
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 
@@ -37,7 +39,9 @@ import org.opentdc.addressbooks.ServiceProvider;
 import org.opentdc.opencrx.AbstractOpencrxServiceProvider;
 import org.opentdc.service.exception.DuplicateException;
 import org.opentdc.service.exception.InternalServerErrorException;
+import org.opentdc.service.exception.NotAllowedException;
 import org.opentdc.service.exception.NotFoundException;
+import org.opentdc.service.exception.ValidationException;
 
 public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider implements ServiceProvider {
 
@@ -61,13 +65,17 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	}
 
 	@Override
-	public AddressbookModel create(AddressbookModel addressbook) {
+	public AddressbookModel create(
+			AddressbookModel addressbook) 
+		throws DuplicateException, ValidationException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AddressbookModel read(String id) {
+	public AddressbookModel read(
+			String id) 
+		throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -75,81 +83,116 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	@Override
 	public AddressbookModel update(
 		String id,
-		AddressbookModel addressbook
-	) {
+		AddressbookModel addressbook) 
+		throws NotFoundException, NotAllowedException {
 		return null;
 	}
 
 	@Override
-	public void delete(String id) {
+	public void delete(
+			String id) 
+		throws NotFoundException, InternalServerErrorException {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<ContactModel> listContacts(String aid, String query,
-			String queryType, int position, int size) {
+	public List<ContactModel> listContacts(
+			String aid, 
+			String query,
+			String queryType, 
+			int position, 
+			int size) 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ContactModel createContact(String aid, ContactModel contact)
-			throws DuplicateException {
+	public ContactModel createContact(
+			String aid, 
+			ContactModel contact)
+			throws DuplicateException, ValidationException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ContactModel readContact(String aid, String cid) throws NotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public ContactModel updateContact(String aid, String cid,
-			ContactModel contact) throws NotFoundException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void deleteContact(String aid, String cid) throws NotFoundException,
-			InternalServerErrorException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public List<AddressModel> listAddresses(String aid, String cid,
-			String query, String queryType, int position, int size) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AddressModel createAddress(String aid, String cid,
-			AddressModel address) throws DuplicateException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AddressModel readAddress(String aid, String cid, String adrid)
+	public ContactModel readContact(
+			String aid, 
+			String cid) 
 			throws NotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AddressModel updateAddress(String aid, String cid, String adrid,
-			AddressModel address) throws NotFoundException {
+	public ContactModel updateContact(
+			String aid, 
+			String cid,
+			ContactModel contact) 
+			throws NotFoundException, NotAllowedException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void deleteAddress(String aid, String cid, String adrid)
+	public void deleteContact(
+			String aid, 
+			String cid) 
+			throws NotFoundException, InternalServerErrorException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<AddressModel> listAddresses(
+			String aid, 
+			String cid,
+			String query, 
+			String queryType, 
+			int position, 
+			int size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressModel createAddress(
+			String aid, 
+			String cid,
+			AddressModel address) 
+			throws DuplicateException, ValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressModel readAddress(
+			String aid, 
+			String cid, 
+			String adrid)
+			throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressModel updateAddress(
+			String aid, 
+			String cid, 
+			String adrid,
+			AddressModel address) 
+			throws NotFoundException, NotAllowedException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteAddress(
+			String aid, 
+			String cid, 
+			String adrid)
 			throws NotFoundException, InternalServerErrorException {
 		// TODO Auto-generated method stub
 		
