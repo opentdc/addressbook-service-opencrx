@@ -39,7 +39,6 @@ import org.opentdc.addressbooks.ServiceProvider;
 import org.opentdc.opencrx.AbstractOpencrxServiceProvider;
 import org.opentdc.service.exception.DuplicateException;
 import org.opentdc.service.exception.InternalServerErrorException;
-import org.opentdc.service.exception.NotAllowedException;
 import org.opentdc.service.exception.NotFoundException;
 import org.opentdc.service.exception.ValidationException;
 
@@ -84,7 +83,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	public AddressbookModel update(
 		String id,
 		AddressbookModel addressbook) 
-		throws NotFoundException, NotAllowedException {
+		throws NotFoundException, ValidationException {
 		return null;
 	}
 
@@ -131,7 +130,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			String aid, 
 			String cid,
 			ContactModel contact) 
-			throws NotFoundException, NotAllowedException {
+			throws NotFoundException, ValidationException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -183,7 +182,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			String cid, 
 			String adrid,
 			AddressModel address) 
-			throws NotFoundException, NotAllowedException {
+			throws NotFoundException, ValidationException {
 		// TODO Auto-generated method stub
 		return null;
 	}
