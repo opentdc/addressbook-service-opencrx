@@ -28,6 +28,7 @@ import java.util.List;
 
 
 
+
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
 
@@ -35,6 +36,7 @@ import org.openmdx.base.exception.ServiceException;
 import org.opentdc.addressbooks.AddressModel;
 import org.opentdc.addressbooks.AddressbookModel;
 import org.opentdc.addressbooks.ContactModel;
+import org.opentdc.addressbooks.OrgModel;
 import org.opentdc.addressbooks.ServiceProvider;
 import org.opentdc.opencrx.AbstractOpencrxServiceProvider;
 import org.opentdc.service.exception.DuplicateException;
@@ -53,6 +55,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		super(context, prefix);
 	}
 
+	/******************************** addressbook *****************************************/
 	@Override
 	public List<AddressbookModel> list(
 		String queryType,
@@ -95,6 +98,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		
 	}
 
+	/******************************** contact *****************************************/
 	@Override
 	public List<ContactModel> listContacts(
 			String aid, 
@@ -144,6 +148,42 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		
 	}
 
+	/******************************** org *****************************************/
+	@Override
+	public List<OrgModel> listOrgs(String aid, String query, String queryType,
+			int position, int size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OrgModel createOrg(String aid, OrgModel org)
+			throws DuplicateException, ValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OrgModel readOrg(String aid, String oid) throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public OrgModel updateOrg(String aid, String oid, OrgModel org)
+			throws NotFoundException, ValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteOrg(String aid, String oid) throws NotFoundException,
+			InternalServerErrorException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/******************************** address *****************************************/
 	@Override
 	public List<AddressModel> listAddresses(
 			String aid, 
