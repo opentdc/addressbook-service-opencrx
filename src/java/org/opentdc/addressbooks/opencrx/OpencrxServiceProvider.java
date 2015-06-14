@@ -98,6 +98,17 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		
 	}
 
+	@Override
+	public List<ContactModel> listAllContacts(
+			String query,
+			String queryType, 
+			int position, 
+			int size) 
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/******************************** contact *****************************************/
 	@Override
 	public List<ContactModel> listContacts(
