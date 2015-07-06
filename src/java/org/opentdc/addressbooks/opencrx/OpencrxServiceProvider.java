@@ -51,7 +51,9 @@ import org.openmdx.base.exception.ServiceException;
 import org.opentdc.addressbooks.AddressModel;
 import org.opentdc.addressbooks.AddressType;
 import org.opentdc.addressbooks.AddressbookModel;
+import org.opentdc.addressbooks.AttributeType;
 import org.opentdc.addressbooks.ContactModel;
+import org.opentdc.addressbooks.MessageType;
 import org.opentdc.addressbooks.OrgModel;
 import org.opentdc.addressbooks.OrgType;
 import org.opentdc.addressbooks.ServiceProvider;
@@ -174,23 +176,23 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		addressModel.setModifiedAt(_address.getModifiedAt());
 		addressModel.setModifiedBy(_address.getModifiedBy().get(0));
 		addressModel.setId(_address.refGetPath().getLastSegment().toClassicRepresentation());
-		addressModel.setAttributeType(
+		addressModel.setAddressType(
 			_address.getCategory().isEmpty() 
 				? null 
-				: _address.getCategory().get(0)				
+				: AddressType.valueOf(_address.getCategory().get(0))				
 		);
-		addressModel.setType(
+		addressModel.setAttributeType(
 			_address.getUsage().contains(400) 
-				? AddressType.HOME
+				? AttributeType.HOME
 				: _address.getUsage().contains(500)
-					? AddressType.WORK
-					: AddressType.OTHER
+					? AttributeType.WORK
+					: AttributeType.OTHER
 		);
 		if(_address instanceof PostalAddress) {
 			PostalAddress _postalAddress = (PostalAddress)_address;
 			addressModel.setCity(_postalAddress.getPostalCity());
 			// @TODO country mapping ISO <-> string
-			addressModel.setCountry(_postalAddress.getPostalCounty());
+			addressModel.setCountryCode(_postalAddress.getPostalCountry());
 			addressModel.setPostalCode(_postalAddress.getPostalCode());
 			addressModel.setStreet(
 				_postalAddress.getPostalStreet().isEmpty() 
@@ -212,7 +214,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			} else {
 				value = _webAddress.getWebUrl();
 			}
-			addressModel.setMsgType(msgType);
+			addressModel.setMsgType(MessageType.fromString(msgType));
 			addressModel.setValue(value);
 		}
 		return addressModel;
@@ -912,11 +914,11 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		try {
 			pm.currentTransaction().begin();
 			_address.getCategory().clear();
-			_address.getCategory().add(address.getAttributeType());
+			_address.getCategory().add(address.getAddressType().toString());
 			_address.getUsage().clear();
-			if(address.getType() == AddressType.HOME) {
+			if(address.getAttributeType() == AttributeType.HOME) {
 				_address.getUsage().add((short)400);
-			} else if(address.getType() == AddressType.WORK) {
+			} else if(address.getAttributeType() == AttributeType.WORK) {
 				_address.getUsage().add((short)500);
 			} else {
 				_address.getUsage().add((short)1800);
@@ -925,7 +927,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 				PostalAddress _postalAddress = (PostalAddress)_address;
 				_postalAddress.setPostalCity(address.getCity());
 				// @TODO country mapping ISO <-> string
-				_postalAddress.setPostalCounty(address.getCountry());
+				_postalAddress.setPostalCountry(address.getCountryCode());
 				_postalAddress.setPostalCode(address.getPostalCode());
 				_postalAddress.getPostalStreet().clear();
 				if(address.getStreet() != null) {
