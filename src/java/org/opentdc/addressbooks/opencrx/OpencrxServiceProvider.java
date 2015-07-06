@@ -40,9 +40,11 @@ import org.opencrx.kernel.account1.jmi1.Account;
 import org.opencrx.kernel.account1.jmi1.AccountAddress;
 import org.opencrx.kernel.account1.jmi1.AccountMembership;
 import org.opencrx.kernel.account1.jmi1.Contact;
+import org.opencrx.kernel.account1.jmi1.EMailAddress;
 import org.opencrx.kernel.account1.jmi1.Group;
 import org.opencrx.kernel.account1.jmi1.LegalEntity;
 import org.opencrx.kernel.account1.jmi1.Member;
+import org.opencrx.kernel.account1.jmi1.PhoneNumber;
 import org.opencrx.kernel.account1.jmi1.PostalAddress;
 import org.opencrx.kernel.account1.jmi1.WebAddress;
 import org.opencrx.kernel.generic.jmi1.EnableDisableCrxObjectParams;
@@ -175,12 +177,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		addressModel.setCreatedBy(_address.getCreatedBy().get(0));
 		addressModel.setModifiedAt(_address.getModifiedAt());
 		addressModel.setModifiedBy(_address.getModifiedBy().get(0));
-		addressModel.setId(_address.refGetPath().getLastSegment().toClassicRepresentation());
-		addressModel.setAddressType(
-			_address.getCategory().isEmpty() 
-				? null 
-				: AddressType.valueOf(_address.getCategory().get(0))				
-		);
+		addressModel.setId(_address.refGetPath().getLastSegment().toClassicRepresentation());		
 		addressModel.setAttributeType(
 			_address.getUsage().contains(400) 
 				? AttributeType.HOME
@@ -190,8 +187,8 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		);
 		if(_address instanceof PostalAddress) {
 			PostalAddress _postalAddress = (PostalAddress)_address;
+			addressModel.setAddressType(AddressType.POSTAL);
 			addressModel.setCity(_postalAddress.getPostalCity());
-			// @TODO country mapping ISO <-> string
 			addressModel.setCountryCode(_postalAddress.getPostalCountry());
 			addressModel.setPostalCode(_postalAddress.getPostalCode());
 			addressModel.setStreet(
@@ -200,22 +197,35 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 					: _postalAddress.getPostalStreet().get(0)
 			);
 		} else if(_address instanceof WebAddress) {
-			WebAddress _webAddress = (WebAddress)_address;
-			String webUrl = _webAddress.getWebUrl();
+			WebAddress webAddress = (WebAddress)_address;
+			String webUrl = webAddress.getWebUrl();
 			String msgType = null;
 			String value = null;
 			if(webUrl.indexOf("://") >= 0) {
 				int pos = webUrl.indexOf("://");
-				msgType = _webAddress.getWebUrl().substring(0, pos);
+				msgType = webAddress.getWebUrl().substring(0, pos);
 				if(msgType.isEmpty()) {
-					msgType = null;
+					msgType = "HTTP";
 				}
-				value = _webAddress.getWebUrl().substring(pos + 3);
+				value = webAddress.getWebUrl().substring(pos + 3);
 			} else {
-				value = _webAddress.getWebUrl();
+				value = webAddress.getWebUrl();
 			}
-			addressModel.setMsgType(MessageType.fromString(msgType));
+			if("HTTP".equalsIgnoreCase(msgType)) {
+				addressModel.setAddressType(AddressType.WEB);
+			} else {
+				addressModel.setAddressType(AddressType.MESSAGING);
+				addressModel.setMsgType(MessageType.valueOf(msgType));
+			}
 			addressModel.setValue(value);
+		} else if(_address instanceof PhoneNumber) {
+			PhoneNumber phoneNumber = (PhoneNumber)_address;
+			addressModel.setAddressType(AddressType.PHONE);
+			addressModel.setValue(phoneNumber.getPhoneNumberFull());
+		} else if(_address instanceof EMailAddress) {
+			EMailAddress emailAddress = (EMailAddress)_address;
+			addressModel.setAddressType(AddressType.EMAIL);
+			addressModel.setValue(emailAddress.getEmailAddress());
 		}
 		return addressModel;
 	}
@@ -821,21 +831,54 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 				throw new ValidationException("address <" + address.getId() + "> contains an ID generated on the client. This is not allowed.");
 			}
 		}
+		if (address.getAddressType() == null) {
+			throw new ValidationException("address must contain an addressType.");
+		}
+		if (address.getAttributeType() == null) {
+			throw new ValidationException("address must contain an attributeType.");
+		}
+		if(address.getAddressType() != AddressType.POSTAL && address.getValue() == null) {
+			throw new ValidationException("address must contain a value.");
+		}
 		AccountAddress _address = null;
 		try {
 			pm.currentTransaction().begin();
-			if(address.getValue() == null || address.getValue().isEmpty()) {
-				PostalAddress _postalAddress = pm.newInstance(PostalAddress.class);
-				if(address.getStreet() != null) {
-					_postalAddress.getPostalStreet().add(address.getStreet());
+			switch(address.getAddressType()) {
+				case PHONE: {
+					PhoneNumber phoneNumber = pm.newInstance(PhoneNumber.class);
+					phoneNumber.setPhoneNumberFull(address.getValue());
+					_address = phoneNumber;
+					break;
 				}
-				_postalAddress.setPostalCode(address.getPostalCode());
-				_postalAddress.setPostalCity(address.getCity());
-				_address = _postalAddress;
-			} else {
-				WebAddress _webAddress = pm.newInstance(WebAddress.class);
-				_webAddress.setWebUrl(address.getMsgType() + "://" + address.getValue());
-				_address = _webAddress;
+				case EMAIL: {
+					EMailAddress emailAddress = pm.newInstance(EMailAddress.class);
+					emailAddress.setEmailAddress(address.getValue());
+					_address = emailAddress;
+					break;
+				}
+				case WEB: {
+					WebAddress webAddress = pm.newInstance(WebAddress.class);
+					webAddress.setWebUrl("HTTP://" + address.getValue());
+					_address = webAddress;
+					break;
+				}
+				case MESSAGING: {
+					WebAddress webAddress = pm.newInstance(WebAddress.class);
+					webAddress.setWebUrl(address.getMsgType() + "://" + address.getValue());
+					_address = webAddress;
+					break;
+				}
+				case POSTAL: {
+					PostalAddress postalAddress = pm.newInstance(PostalAddress.class);
+					if(address.getStreet() != null) {
+						postalAddress.getPostalStreet().add(address.getStreet());
+					}
+					postalAddress.setPostalCode(address.getPostalCode());
+					postalAddress.setPostalCity(address.getCity());
+					postalAddress.setPostalCountry(address.getCountryCode());
+					_address = postalAddress;
+					break;
+				}
 			}
 			_account.addAddress(
 				Utils.getUidAsString(),
@@ -910,35 +953,63 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		if(_address == null || Boolean.TRUE.equals(_address.isDisabled())) {
 			throw new NotFoundException("address <" + adrid + "> was not found.");
 		}
+		AddressModel oldAddress = this.mapToAddress(_address);
+		if(oldAddress.getAddressType() != address.getAddressType()) {
+			throw new ValidationException("address <" + adrid + "> can not be updated, because it is not allowed to change the AddressType.");			
+		}
 		// Update address
 		try {
 			pm.currentTransaction().begin();
-			_address.getCategory().clear();
-			_address.getCategory().add(address.getAddressType().toString());
+			// Usage
 			_address.getUsage().clear();
-			if(address.getAttributeType() == AttributeType.HOME) {
-				_address.getUsage().add((short)400);
-			} else if(address.getAttributeType() == AttributeType.WORK) {
-				_address.getUsage().add((short)500);
-			} else {
-				_address.getUsage().add((short)1800);
+			switch(address.getAttributeType()) {
+				case HOME:
+					_address.getUsage().add((short)400);
+					break;
+				case WORK:
+					_address.getUsage().add((short)500);
+					break;
+				case OTHER:
+					_address.getUsage().add((short)1800);
+					break;
 			}
-			if(_address instanceof PostalAddress) {
-				PostalAddress _postalAddress = (PostalAddress)_address;
-				_postalAddress.setPostalCity(address.getCity());
-				// @TODO country mapping ISO <-> string
-				_postalAddress.setPostalCountry(address.getCountryCode());
-				_postalAddress.setPostalCode(address.getPostalCode());
-				_postalAddress.getPostalStreet().clear();
-				if(address.getStreet() != null) {
-					_postalAddress.getPostalStreet().add(address.getStreet());
+			switch(address.getAddressType()) {
+				case PHONE: {
+					PhoneNumber phoneNumber = (PhoneNumber)_address;
+					phoneNumber.setPhoneNumberFull(address.getValue());
+					_address = phoneNumber;
+					break;
 				}
-			} else if(_address instanceof WebAddress) {
-				WebAddress _webAddress = (WebAddress)_address;
-				_webAddress.setWebUrl(
-					(address.getMsgType() == null ? "" : address.getMsgType()) + 
-					"://" + address.getValue()
-				);
+				case EMAIL: {
+					EMailAddress emailAddress = (EMailAddress)_address;
+					emailAddress.setEmailAddress(address.getValue());
+					_address = emailAddress;
+					break;
+				}
+				case WEB: {
+					WebAddress webAddress = (WebAddress)_address;
+					webAddress.setWebUrl("HTTP://" + address.getValue());
+					_address = webAddress;
+					break;
+				}
+				case MESSAGING: {
+					WebAddress webAddress = (WebAddress)_address;
+					webAddress.setWebUrl(address.getMsgType() + "://" + address.getValue());
+					_address = webAddress;
+					break;
+				}
+				case POSTAL: {
+					PostalAddress postalAddress = (PostalAddress)_address;
+					postalAddress.getPostalStreet().clear();
+					if(address.getStreet() != null) {
+						postalAddress.getPostalStreet().add(address.getStreet());
+					}
+					postalAddress.setPostalCode(address.getPostalCode());
+					postalAddress.setPostalCity(address.getCity());
+					postalAddress.setPostalCountry(address.getCountryCode());
+					_address = postalAddress;
+					break;
+				}
 			}
 			pm.currentTransaction().commit();
 		} catch(Exception e) {
@@ -946,7 +1017,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			try {
 				pm.currentTransaction().rollback();
 			} catch(Exception ignore) {}
-			throw new InternalServerErrorException(e.getMessage());
+			throw new ValidationException("address <" + adrid + "> can not be updated, because it is not allowed to change the AddressType.");
 		}
 		return this.mapToAddress(_address);
 	}
