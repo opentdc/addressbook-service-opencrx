@@ -68,6 +68,10 @@ import org.opentdc.service.exception.ValidationException;
 import org.w3c.spi2.Datatypes;
 import org.w3c.spi2.Structures;
 
+/**
+ * Addressbooks service for openCRX.
+ *
+ */
 public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider implements ServiceProvider {
 
 	private static final Logger logger = Logger.getLogger(OpencrxServiceProvider.class.getName());
