@@ -1069,4 +1069,47 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 		}
 		logger.info("deleteAddress(" + adrid + ")");		
 	}
+
+	@Override
+	public List<OrgModel> listAllOrgs(String query, String queryType,
+			int position, int size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<AddressModel> listOrgAddresses(String aid, String oid,
+			String query, String queryType, int position, int size) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressModel createOrgAddress(String aid, String oid,
+			AddressModel address) throws DuplicateException,
+			ValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressModel readOrgAddress(String aid, String oid, String adrid)
+			throws NotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public AddressModel updateOrgAddress(String aid, String oid, String adrid,
+			AddressModel address) throws NotFoundException, ValidationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void deleteOrgAddress(String aid, String oid, String adrid)
+			throws NotFoundException, InternalServerErrorException {
+		// TODO Auto-generated method stub
+		
+	}
 }
