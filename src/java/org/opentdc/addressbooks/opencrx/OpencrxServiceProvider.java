@@ -241,8 +241,8 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public List<AddressbookModel> list(
-		String queryType,
 		String query,
+		String queryType,
 		int position,
 		int size
 	) {
