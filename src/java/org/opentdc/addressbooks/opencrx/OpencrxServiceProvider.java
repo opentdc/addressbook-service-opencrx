@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.naming.NamingException;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.opencrx.kernel.account1.cci2.AccountAddressQuery;
 import org.opencrx.kernel.account1.cci2.ContactQuery;
@@ -266,6 +267,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public AddressbookModel create(
+		HttpServletRequest request,
 		AddressbookModel addressbook
 	) throws DuplicateException, ValidationException {
 		PersistenceManager pm = this.getPersistenceManager();
@@ -312,6 +314,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public AddressbookModel update(
+		HttpServletRequest request,
 		String id,
 		AddressbookModel addressbook
 	) throws NotFoundException, ValidationException {
@@ -442,6 +445,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public ContactModel createContact(
+		HttpServletRequest request,
 		String aid, 
 		ContactModel contact
 	) throws NotFoundException, DuplicateException, ValidationException {
@@ -482,6 +486,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			null
 		);
 		return this.updateContact(
+			request,
 			aid,
 			_contact.refGetPath().getLastSegment().toClassicRepresentation(),
 			contact
@@ -512,6 +517,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public ContactModel updateContact(
+		HttpServletRequest request,
 		String aid, 
 		String cid,
 		ContactModel contact
@@ -631,6 +637,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public OrgModel createOrg(
+		HttpServletRequest request,
 		String aid, 
 		OrgModel org
 	) throws DuplicateException, ValidationException {
@@ -667,6 +674,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			org.setOrgType(OrgType.OTHER);
 		}
 		return this.updateOrg(
+			request,
 			aid, 
 			_organisation.refGetPath().getLastSegment().toClassicRepresentation(), 
 			org
@@ -697,6 +705,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public OrgModel updateOrg(
+		HttpServletRequest request,
 		String aid, 
 		String oid, 
 		OrgModel org
@@ -815,6 +824,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public AddressModel createAddress(
+		HttpServletRequest request,
 		String aid, 
 		String cid,
 		AddressModel address
@@ -897,6 +907,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 			throw new InternalServerErrorException(e.getMessage());
 		}
 		return this.updateAddress(
+			request,
 			aid,
 			cid,
 			_address.refGetPath().getLastSegment().toClassicRepresentation(), 
@@ -936,6 +947,7 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	 */
 	@Override
 	public AddressModel updateAddress(
+		HttpServletRequest request,
 		String aid, 
 		String cid, 
 		String adrid,
@@ -1071,37 +1083,61 @@ public class OpencrxServiceProvider extends AbstractOpencrxServiceProvider imple
 	}
 
 	@Override
-	public List<OrgModel> listAllOrgs(String query, String queryType,
-			int position, int size) {
+	public List<OrgModel> listAllOrgs(
+			String query, 
+			String queryType,
+			int position, 
+			int size) 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<AddressModel> listOrgAddresses(String aid, String oid,
-			String query, String queryType, int position, int size) {
+	public List<AddressModel> listOrgAddresses(
+			String aid, 
+			String oid,
+			String query, 
+			String queryType, 
+			int position, 
+			int size) 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AddressModel createOrgAddress(String aid, String oid,
-			AddressModel address) throws DuplicateException,
-			ValidationException {
+	public AddressModel createOrgAddress(
+			HttpServletRequest request,
+			String aid, 
+			String oid,
+			AddressModel address) 
+			throws DuplicateException, ValidationException 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AddressModel readOrgAddress(String aid, String oid, String adrid)
-			throws NotFoundException {
+	public AddressModel readOrgAddress(
+			String aid, 
+			String oid, 
+			String adrid)
+			throws NotFoundException 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AddressModel updateOrgAddress(String aid, String oid, String adrid,
-			AddressModel address) throws NotFoundException, ValidationException {
+	public AddressModel updateOrgAddress(
+			HttpServletRequest request,
+			String aid, 
+			String oid, 
+			String adrid,
+			AddressModel address) 
+					throws NotFoundException, ValidationException 
+	{
 		// TODO Auto-generated method stub
 		return null;
 	}
